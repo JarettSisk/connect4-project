@@ -10,11 +10,11 @@ const HEIGHT = 6; // Height of the board
 let currPlayer = 1; // active player: 1 or 2
 const board = []; // array of rows, each row is array of cells  (board[y][x])
 
-/** makeBoard: create in-JS board structure:
- *    board = array of rows, each row is array of cells  (board[y][x])
+/** makeBoard: create in=memory board structure:
+ *    board = array of rows, each row is array an of cells  (board[y][x])
  */
 const makeBoard = () => {
-  // Using a nested for loop to dynamically generate the array
+  // Using a nested for loop to generate the array
   for(let h = 0; h < HEIGHT; h++) {
     board.push([]); // Push new row
     for(let w = 0; w < WIDTH; w++) {
@@ -23,7 +23,7 @@ const makeBoard = () => {
   }
 }
 
-/** makeHtmlBoard: make HTML table and row of column tops. */
+// MakeHtmlBoard: Generate the DOM elements for the top row (buttons) and the game spaces
 const makeHtmlBoard = () => {
   const htmlBoard = document.querySelector("#board") // Store the board EL
 
@@ -56,18 +56,16 @@ const makeHtmlBoard = () => {
   }
 }
 
-/** findSpotForCol: given column x, return top empty y (null if filled) */
+/** findSpotForCol: given column x (The clicked column), return lowest empty y (null if filled) */
 const findSpotForCol = (x) => {
   // vertical index is between 0 and 5
-  // x is the horizontal position
   // I used a reverse for loop to avoid having to check if the entire was empty.
   for (let y = 5; y >=0; y--) {
-    // Since we are moving from the bottom up, we return the first null space in that column
+    // Since we are moving from the bottom up, we find the first null (empty) space in that column and return the index
     if(board[y][x] === null) {
       return y;
     }
   }
-  // If board is full
   return null;
 }
 
@@ -96,7 +94,7 @@ const handleClick = (evt) => {
     return;
   }
 
-  // Set current space to equal the current player
+  // Set current space in board to equal the current player
   board[y][x] = currPlayer;
   // Create and place the piece into the HTML table.
   placeInTable(y, x);
@@ -117,9 +115,9 @@ const handleClick = (evt) => {
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 function checkForWin() {
   function _win(cells) {
-    // Check four cells to see if they're all color of current player
+    // Check four cells to see if they're all (id) of current player
     //  - cells: list of four (y, x) cells
-    //  - returns true if all are legal coordinates & all match currPlayer
+    //  - returns true if all are legal coordinates & all 4 match currPlayer
     return cells.every(([y, x]) =>
         y >= 0 &&
         y < HEIGHT &&
@@ -132,6 +130,7 @@ function checkForWin() {
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
       // Creating arrays that would equal a win to check against the logic in the _win function
+      // If all four of the items listed in one of the combinations below are legal moves, and all match the currPlayer, then they win
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
       let vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
       let diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
